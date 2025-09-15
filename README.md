@@ -1,13 +1,22 @@
-# Daniels API Proxy Server
+# Daniels Orchestral Music API Proxy
 
-A secure proxy server for accessing the Daniels Orchestral Music API from Monday.com board views.
+A Vercel-hosted proxy server for the Daniels Orchestral Music API, designed to work with Monday.com integrations.
 
-## Endpoints
+## Features
 
-- `POST /api/search` - Search orchestral works
-- `POST /api/fetch` - Get detailed orchestration information
+- 🎼 Search orchestral works in the Daniels database
+- 📊 Fetch detailed orchestration information
+- 🔒 Secure server-side API credential handling
+- 🌐 CORS-enabled for Monday.com integration
+- ⚡ Serverless deployment on Vercel
 
-## Environment Variables
+## API Endpoints
 
-- `DANIELS_API_ID` - Your Daniels API ID
-- `DANIELS_API_TOKEN` - Your Daniels API Token
+### POST /api/search
+Search for orchestral works by composer, title, or keywords.
+
+**Request:**
+```json
+{
+  "query": "Beethoven Symphony 9"
+}
