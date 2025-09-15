@@ -1,0 +1,16 @@
+{
+  "name": "daniels-api-proxy",
+  "version": "1.0.0",
+  "description": "Vercel serverless proxy for Daniels Orchestral Music API",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}
