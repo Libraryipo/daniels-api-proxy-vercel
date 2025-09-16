@@ -1,38 +1,38 @@
-const fetch = require("node-fetch");
-
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
+  // Allow CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-  if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  }
 
   try {
     const { query } = req.body;
-    if (!query || !query.trim()) {
-      return res.status(400).json({ error: "Query parameter is required" });
+
+    if (!query) {
+      return res.status(400).json({ ok: false, error: "Missing 'query' field" });
     }
 
-    const response = await fetch("https://api.daniels-orchestral.com/search", {
+    const response = await fetch(`${process.env.DANIELS_API_BASE}/search`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-ID": "1214",
-        "X-API-Token": "028c3e27306b3441"
+        "Authorization": `Bearer ${process.env.DANIELS_API_KEY}`,
       },
-      body: JSON.stringify({ query: query.trim() })
+      body: JSON.stringify({ query }),
     });
 
-    if (!response.ok) {
-      const text = await response.text();
-      return res.status(response.status).json({ error: `Daniels API error: ${text}` });
-    }
-
     const data = await response.json();
-    return res.status(200).json(data);
+    return res.status(response.status).json(data);
+
   } catch (err) {
-    console.error("❌ Proxy search error:", err);
-    return res.status(500).json({ error: "Internal server error", details: err.message });
+    console.error("Proxy error:", err);
+    return res.status(500).json({ ok: false, error: "Internal server error" });
   }
-};
+}
